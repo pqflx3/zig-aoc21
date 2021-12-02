@@ -51,7 +51,6 @@ const Day1 = struct {
         var last: u32 = 1000000; // some large number
         for (self.data.items) |val1, idx1| {
             _ = idx1;
-        
             if (val1 > last) {
                 result += 1;
             } else {
@@ -63,6 +62,32 @@ const Day1 = struct {
         return result;
     }
 
+    /// Find number of times two consecutive windows of 3 increase
+    pub fn answerB(self: Self) u32 {
+        var result: u32 = 0;
+        //var r2:u32 = 0;
+        var last0: u32 = 0;
+        var last1: u32 = 0;
+        var last2: u32 = 0; 
+        var last_sum: u32 = 1000000; // some large number
+
+        for (self.data.items) |val1, idx1| {
+            last2 = last1;
+            last1 = last0;
+            last0 = val1;
+
+            // establish window of 3
+            if (idx1 < 2) continue;
+
+            const sum = last2 + last1 + last0;
+            if (sum > last_sum ) { 
+                result += 1;
+            }
+            last_sum = sum;
+        }
+        //std.log.debug("r1: {}, r2: {}", .{ result, r2 });
+        return result;
+    }
 };
 
 pub fn day1() !void {
@@ -79,6 +104,9 @@ pub fn day1() !void {
 
     const answerA = d1.answerA();
     std.log.info("Day1 A: '{}'.", .{answerA});
+    
+    const answerB = d1.answerB();
+    std.log.info("Day1 B: '{}'.", .{answerB});
 }
 
 test "day1" {
@@ -95,4 +123,6 @@ test "day1" {
     const answerA = d1.answerA();
     std.log.info("Day1 A: '{}'.", .{answerA});
 
+    const answerB = d1.answerB();
+    std.log.info("Day1 B: '{}'.", .{answerB});
 }
