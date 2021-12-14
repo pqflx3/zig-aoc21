@@ -51,10 +51,10 @@ const MaskCount = struct {
 const Day3 = struct {
     const Self = @This();
 
-    allocator: *Allocator,
+    allocator: Allocator,
     data: std.ArrayList(u12),
 
-    pub fn init(allocator: *Allocator) Self{
+    pub fn init(allocator: Allocator) Self{
         return Self {
             .allocator = allocator,
             .data = std.ArrayList(u12).init(allocator),
@@ -256,12 +256,14 @@ pub fn day3() !void {
 test "day3" {
     std.testing.log_level = std.log.Level.debug;
     //std.testing.log_level = std.log.Level.info;
-    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    var gpa_impl = std.heap.GeneralPurposeAllocator(.{}){};
+    const gpa = gpa_impl.allocator();
 
-    var d3 = Day3.init(&gpa.allocator);
+    var d3 = Day3.init(gpa);
     defer d3.deinit();
     
-    const filename = "C:/code/aoc21/inputs/day03.txt";
+    //const filename = "C:/code/aoc21/inputs/day03.txt";
+    const filename = "/home/james/code/zig-aoc21/inputs/day03.txt";
     try d3.loadDataFile(filename);
 
     const answerA = d3.answerA();
